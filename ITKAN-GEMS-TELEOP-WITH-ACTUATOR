@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp
-public class ITKAN-GEMS-TELEOP-WITH-ACQUATOR extends LinearOpMode {
+public class ITKAN-GEMS-TELEOP-WITH-ACTUATOR extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontLeft;
