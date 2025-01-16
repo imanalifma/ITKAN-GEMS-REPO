@@ -29,14 +29,16 @@ public class ITKAN-GEMS-TELEOP-WITH-ACTUATOR extends LinearOpMode {
     final double ARM_COLLECT = 1980;
     final double ARM_PARALLEL_COLLECT = 1365;
     final double ARM_SCORE_SAMPLE_IN_LOW = 650;
-    final double ARM_SCORE_SAMPLE_IN_ = 0;
-
+    
     final double INTAKE_COLLECT = 0;
     final double INTAKE_OFF = 0;
     final double INTAKE_DEPOSIT = 0;
 
     final double WRIST_FOLDED_IN = 0;
-    final double WRIST_FOLDED_OUT = 0;
+    final double WRIST_FOLDED_OUT = 1;
+
+    final double CLAW_CLOSED = 0;
+    final double CLAW_OPEN = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
