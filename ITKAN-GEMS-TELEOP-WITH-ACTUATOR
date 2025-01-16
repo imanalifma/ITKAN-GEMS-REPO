@@ -26,9 +26,9 @@ public class ITKAN-GEMS-TELEOP-WITH-ACTUATOR extends LinearOpMode {
     boolean lastCycle = false, currCycle = false;
 
     final double ARM_COLLAPSED_INTO_ROBOT = 0;
-    final double ARM_COLLECT = 0;
-    final double ARM_SCORE_SPECIMEN = 0;
-    final double ARM_SCORE_SAMPLE_IN_LOW = 0;
+    final double ARM_COLLECT = 1980;
+    final double ARM_PARALLEL_COLLECT = 1365;
+    final double ARM_SCORE_SAMPLE_IN_LOW = 650;
     final double ARM_SCORE_SAMPLE_IN_ = 0;
 
     final double INTAKE_COLLECT = 0;
@@ -102,13 +102,13 @@ public class ITKAN-GEMS-TELEOP-WITH-ACTUATOR extends LinearOpMode {
             
             // Arm control
             if (gamepad2.dpad_up) {
-                armTarget = 0; // Home position
+                armTarget = ARM_COLLAPSED_INTO_ROBOT ; // Home position 0
             } else if (gamepad2.dpad_left) {
-                armTarget = 650; // Position 1
+                armTarget = ARM_SCORE_SAMPLE_IN_LOW; // Position 1 650
             } else if (gamepad2.dpad_right) {
-                armTarget = 1980; // Position 2
+                armTarget = ARM_COLLECT; // Position 2 1980
             } else if (gamepad2.dpad_down) {
-                armTarget = 1365; //Position 3
+                armTarget = ARM_PARALLEL_COLLECT; //Position 3 1365
             }
 
             // Base movement logic
