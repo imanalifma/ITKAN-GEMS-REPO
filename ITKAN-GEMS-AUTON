@@ -77,15 +77,15 @@ public class ITKAN_GEMS_AUTON extends LinearOpMode {
 
   @Override
   public void runOpMode() {
-
-    frontRight = hardwareMap.get(DcMotor.class, "fr");
-    frontLeft = hardwareMap.get(DcMotor.class, "fl");
-    backRight = hardwareMap.get(DcMotor.class, "br");
     backLeft = hardwareMap.get(DcMotor.class, "bl");
-    
-   /* Arm = hardwareMap.get(DcMotor.class, "Arm");
-    Intake = hardwareMap.get(DcMotor.class, "Intake");*/
-
+    backRight = hardwareMap.get(DcMotor.class, "br");
+    frontLeft = hardwareMap.get(DcMotor.class, "fl");
+    frontRight = hardwareMap.get(DcMotor.class, "fr");
+    armMotor = hardwareMap.get(DcMotor.class, "arm");
+    foreArmMotor = hardwareMap.get(DcMotor.class, "forearm");
+    liftMotor = hardwareMap.get(DcMotor.class, "lift");
+    claw = hardwareMap.get(Servo.class, "claw");
+    intake = hardwareMap.get(Servo.class, "intake");
  
     frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
     backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
