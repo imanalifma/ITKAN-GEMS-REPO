@@ -9,12 +9,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous
 public class ITKAN_GEMS_AUTON extends LinearOpMode {
 
-  private DcMotor frontRight;
-  private DcMotor frontLeft;
-  private DcMotor backRight;
   private DcMotor backLeft;
-  private DcMotor Arm;
-  private DcMotor Intake;
+  private DcMotor backRight;
+  private DcMotor frontLeft;
+  private DcMotor frontRight;
+  private DcMotor armMotor;
+  private DcMotor foreArmMotor;
+  private DcMotor liftMotor;
+  private Servo claw;
+  private Servo intake;
+
   
   //Convert from the counts per revolution of the encoder to counts per inch
   static final double HD_TICKS_PER_REV = 28;
