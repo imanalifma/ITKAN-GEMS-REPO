@@ -18,7 +18,6 @@ public class ITKAN_GEMS_TELEOP_WITH_ACTUATOR extends LinearOpMode {
     private DcMotor liftMotor;
     private Servo claw;
     private Servo intake;
-    private Servo armServo;
     private int armTarget = 0;
     double joystick;
     boolean isPressed;
