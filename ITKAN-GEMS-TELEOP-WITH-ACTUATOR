@@ -19,6 +19,8 @@ public class ITKAN_GEMS_TELEOP_WITH_ACTUATOR extends LinearOpMode {
     private Servo claw;
     private Servo intake;
     private int armTarget = 0;
+    int foreArmTarget = 0;
+    int liftTarget = 0;
     double joystick;
     boolean isPressed;
     boolean isDown = true;
@@ -178,4 +180,36 @@ public class ITKAN_GEMS_TELEOP_WITH_ACTUATOR extends LinearOpMode {
             intake.setPosition(0.8);
         }
     }
+public void moveToPositions(int ArmPos, int ForeArmPos, int LiftPos) {
+    // Move arm motor to target position
+    armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    armMotor.setTargetPosition(ArmPos);
+    armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    armMotor.setPower(0.5);
+
+    // Move forearm motor to target position
+    foreArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    foreArmMotor.setTargetPosition(ForeArmPos);
+    foreArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    foreArmMotor.setPower(0.5);
+
+    // Move lift motor to target position
+    liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    liftMotor.setTargetPosition(LiftPos);
+    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    liftMotor.setPower(0.5);
+}
+
+
+
+public void highBasket(int ArmPos, int ForeArmPos, int LiftPos) {
+    moveToPositions(ArmPos, ForeArmPos, LiftPos);
+}
+
+public void lowBasket(int ArmPos, int ForeArmPos, int LiftPos) {
+    moveToPositions(ArmPos, ForeArmPos, LiftPos);
+}
+
+public void specimenHang(int ArmPos, int ForeArmPos, int LiftPos) {
+    moveToPositions(ArmPos, ForeArmPos, LiftPos);
 }
