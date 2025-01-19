@@ -103,16 +103,7 @@ public class ITKAN_GEMS_TELEOP_WITH_ACTUATOR extends LinearOpMode {
             leftx1 = gamepad1.left_stick_x;
             rightx1 = gamepad1.right_stick_x;
             
-            // Arm control
-            if (gamepad2.dpad_up) {
-                armTarget = ARM_COLLAPSED_INTO_ROBOT ; // Home position 0
-            } else if (gamepad2.dpad_left) {
-                armTarget = ARM_SCORE_SAMPLE_IN_LOW; // Position 1 650
-            } else if (gamepad2.dpad_right) {
-                armTarget = ARM_COLLECT; // Position 2 1980
-            } else if (gamepad2.dpad_down) {
-                armTarget = ARM_PARALLEL_COLLECT; //Position 3 1365
-            }
+            
 
             // Base movement logic
             if (gamepad1.right_bumper) {
@@ -126,16 +117,27 @@ public class ITKAN_GEMS_TELEOP_WITH_ACTUATOR extends LinearOpMode {
             frontRight.setPower((basepower * lefty1) + (basepower * leftx1) + basepower * rightx1);
             backLeft.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * -rightx1);
 
+            //Added by NA on 1/19/2025
+            //The logic has changed and now on button press, the whole arm, forarm and lift will be controlled together
+            // Arm control
+            if (gamepad2.dpad_up) {
+            highBasket();
+            } else if (gamepad2.dpad_left) {
+            lowBasket();
+            } else if (gamepad2.dpad_right) {
+            specimenHang();     
+            } else if (gamepad2.dpad_down) {
+                armTarget = ARM_PARALLEL_COLLECT; //Position 3 1365
+            }
+
             // Arm Motor control
-            if (gamepad2.right_bumper) {
+           /* if (gamepad2.right_bumper) {
                 armMotor.setPower(1); // 100% position
             } else {
                 armMotor.setPower(0); // 0% position
-            }
+            }*/
 
-            // Intake control 
-            lastCycle = currCycle;
-            currCycle = gamepad2.y;
+            // wrist control 
             
             if (gamepad2.y) {
                 move_wrist("home");
@@ -149,7 +151,7 @@ public class ITKAN_GEMS_TELEOP_WITH_ACTUATOR extends LinearOpMode {
 
             // Claw control 
             lastCycle = currCycle;
-            currCycle = gamepad2.left_bumper;
+            currCycle = gamepad2.right_bumper;
 
             if (currCycle && !lastCycle) {
                 isDown = !isDown;
