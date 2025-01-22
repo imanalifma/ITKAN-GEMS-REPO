@@ -1,0 +1,17 @@
+ void MoveTestMotor(double targetPosition){
+        double error = forearm.getCurrentPosition();
+        double lastError = 0;
+        while(Math.abs(error) <= 9 && repetitions < 40){
+        error = forearm.getCurrentPosition() - targetPosition;
+        double changeInError = lastError - error;
+        integral += changeInError * PIDTimer.time();
+        double derivative = changeInError / PIDTimer.time();
+        double P = testPID.p * error;
+        double I = testPID.i * integral;
+        double D = testPID.d * derivative;
+        forearm.setPower(P + I + D);
+        error = lastError;
+        repetitions ++;
+        PIDTimer.reset();
+        }
+    }
