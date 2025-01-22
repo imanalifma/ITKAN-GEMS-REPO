@@ -62,6 +62,9 @@ public class ITKAN_GEMS_TELEOP_WITH_ACTUATOR extends LinearOpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        rightArmMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftArmMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         // Set zero power behavior
         rightArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
