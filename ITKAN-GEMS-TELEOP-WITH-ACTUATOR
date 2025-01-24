@@ -236,6 +236,7 @@ public void moveToPositions(int ArmPos, int ForeArmPos, int LiftPos) {
 
 public void highBasket(int ArmPos, int ForeArmPos, int LiftPos) {
     moveToPositions(ArmPos, ForeArmPos, LiftPos);
+
 }
 
 public void lowBasket(int ArmPos, int ForeArmPos, int LiftPos) {
