@@ -74,33 +74,37 @@ public class Gems_Test extends LinearOpMode {
             rightx1 = gamepad1.right_stick_x;
             
             // Arm control
-            if (gamepad2.right_bumper) {
+            if (gamepad2.right_bumper) { //0 position
                /* armTarget = 0; // Home position
                // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 armMotor.setTargetPosition(armTarget);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armMotor.setPower(0.5);*/
-                move_arm(0);
+                move_arm(0); 
                 intake.setPosition(0);
              
-            if (gamepad2.dpad_down) {
-                armTarget = -125; // Home position
+            if (gamepad2.x) {
+                /*armTarget = -125; 
                // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 armMotor.setTargetPosition(armTarget);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-                intake.setPosition(0.9);
+                armMotor.setPower(0.5);*/
+                claw.setPosition(1);
+                move_arm(-125);
+                intake.setPosition(0.2); // grab position
                 
                 //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            } else if (gamepad2.dpad_left) {
-                armTarget = -1700; // Position 1
+            } else if (gamepad2.a) {
+                /*armTarget = -1700; // Scoring
                // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                  armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 armMotor.setTargetPosition(armTarget);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
+                armMotor.setPower(0.5);*/
+                move_arm(-1700);
+                intake.setPosition(0);
                // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             } else if (gamepad2.dpad_right) {
                 armTarget = -1227; // Position 2 -1980
@@ -111,15 +115,16 @@ public class Gems_Test extends LinearOpMode {
                 armMotor.setPower(0.5);
                // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-            if (gamepad2.dpad_up) {
-                armTarget = -650; //Position 3
+            if (gamepad2.y) {
+                /*armTarget = -650; //Position 3
                // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                  armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 armMotor.setTargetPosition(armTarget);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-                //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                //intake.setPosition(0.2);
+                armMotor.setPower(0.5);*/
+                move_arm(-550); // drive position
+                intake.setPosition(0);
+                claw.setPosition(0);
             }
 
             // Base movement logic
@@ -153,7 +158,7 @@ public class Gems_Test extends LinearOpMode {
 
             // Claw control 
             lastCycle = currCycle;
-            currCycle = gamepad2.right_bumper;
+            currCycle = gamepad2.b;
             telemetry.addData("Claw Last", lastCycle);
             telemetry.addData("Claw", currCycle);
             if (currCycle && !lastCycle) {
