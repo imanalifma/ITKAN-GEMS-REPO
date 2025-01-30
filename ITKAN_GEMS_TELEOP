@@ -124,12 +124,22 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             double lefty = (gamepad1.left_stick_y + gamepad1.right_stick_y); // forward and backward
             double rightx = (gamepad1.right_stick_x); // turn left and right
 
-
+            // Base movement logic
+            if (gamepad1.right_bumper) {
+                basepower = 0.5; // Low speed mode
+            } else {
+                basepower = 0.7; // Full power driving
+            }
             
-            frontLeft.setPower(lefty- leftx - rightx);
+            frontLeft.setPower((basepower * -lefty1) + (basepower * leftx1) + basepower * rightx1);
+            backRight.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * rightx1);
+            frontRight.setPower((basepower * lefty1) + (basepower * leftx1) + basepower * rightx1);
+            backLeft.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * -rightx1);
+            
+            /*frontLeft.setPower(lefty- leftx - rightx);
             frontRight.setPower(lefty + leftx + rightx);
             backLeft.setPower(lefty + leftx - rightx);
-            backRight.setPower(lefty - leftx + rightx);
+            backRight.setPower(lefty - leftx + rightx);*/
 
             
             
