@@ -150,10 +150,6 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
                 moveArmByTicks(0.5, 2); // 
             } 
 
-                      
-            
-            
-
             // Claw control 
             lastCycle = currCycle;
             currCycle = gamepad2.b; //Gamepad 2 B button is used for open and closing the claw
