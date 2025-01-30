@@ -71,15 +71,13 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             
             // Arm control
             if (gamepad2.right_bumper) { //Gamepad 2 right bumper is used for home (0) position for the arm and wrist
-                
                  intake.setPosition(0);
-                move_arm(0); 
-                claw.setPosition(0.8);
+                 move_arm(0); 
+                 claw.setPosition(0.8);
             }
             
             else if (gamepad2.dpad_up) { // Specimen In position
-                
-                 intake.setPosition(0);
+                intake.setPosition(0);
                 move_arm(-900); 
                 claw.setPosition(0.8);
             }
@@ -121,16 +119,17 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             // base code
             /*double leftx = (gamepad1.left_stick_x);//strafe left and right
             double lefty = (gamepad1.left_stick_y + gamepad1.right_stick_y); // forward and backward
-            double rightx = (gamepad1.right_stick_x); // turn left and right*/
+            double rightx = (gamepad1.right_stick_x); // turn left and right
+            */
 
-             // Gamepad control inputs
-            lefty1 = gamepad1.left_stick_y; // forward and backward
-            leftx1 = gamepad1.left_stick_x; //strafe left and right
-            rightx1 = gamepad1.right_stick_x; // turn left and right
+             // Gamepad 1 control inputs
+            lefty1 = gamepad1.left_stick_y; // Gamepad 1 left stick Y is used for forward and backward positions of the wheels
+            leftx1 = gamepad1.left_stick_x; // Gamepad 1 left stick X is used for strafe left and right
+            rightx1 = gamepad1.right_stick_x; // Gamepad 1 right stick X is used to turn left and right
 
 
             // Base movement logic
-            if (gamepad1.right_bumper) {
+            if (gamepad1.right_bumper) {//Gamepad 1 right bumper is used for reducing the speed of the motors
                 basepower = 0.5; // Low speed mode
             } else {
                 basepower = 0.7; // Full power driving
@@ -156,7 +155,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
 
             // Claw control 
             lastCycle = currCycle;
-            currCycle = gamepad2.b; //B button is used for open and closing the claw
+            currCycle = gamepad2.b; //Gamepad 2 B button is used for open and closing the claw
             telemetry.addData("Claw Last", lastCycle);
             telemetry.addData("Claw", currCycle);
             if (currCycle && !lastCycle) {
