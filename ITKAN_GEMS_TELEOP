@@ -150,8 +150,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
                 moveArmByTicks(0.5, 2); // 
             } 
 
-            // Intake control 
-           
+                      
             
             
 
@@ -168,7 +167,8 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
                     claw.setPosition(0.8);
                 }
             }
-            
+
+            // Intake control 
             /*if (gamepad2.dpad_up) {
                 move_wrist("home");
             }  if (gamepad2.dpad_down) {
