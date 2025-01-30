@@ -59,7 +59,6 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
         armMotor.setTargetPosition(0);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(0.5);
-        //Line 58 commented and line 64 added by NA on 1/15/2025
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         double basepower = 0.7;
@@ -71,7 +70,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             
             
             // Arm control
-            if (gamepad2.right_bumper) { //0 position
+            if (gamepad2.right_bumper) { //Gamepad 2 right bumper is used for home (0) position for the arm and wrist
                 
                  intake.setPosition(0);
                 move_arm(0); 
@@ -92,14 +91,14 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
                 claw.setPosition(0);
             }
             
-            else if (gamepad2.x) { // intake grab Position
+            else if (gamepad2.x) { // Gamepad 2 X button is used for the intake grab Position of the arm and wrist
                 
                 claw.setPosition(0); 
                 move_arm(-125);
                 intake.setPosition(0.77); // grab position
                 
                 
-            } else if (gamepad2.a) { // Gamepad A scoring
+            } else if (gamepad2.a) { // Gamepad 2 A button is used for scoring position of the arm and wrist
                 
                 move_arm(-1700);
                 intake.setPosition(0);
@@ -109,7 +108,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
                 intake.setPosition(1);
                
             }
-            if (gamepad2.y) { // drive Position
+            if (gamepad2.y) { // Gamepad 2 Y button is used for the drive Position of the arm and wrist
                 
                 move_arm(-550); // drive position // 600
                 intake.setPosition(0);
@@ -120,9 +119,15 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             
             
             // base code
-            double leftx = (gamepad1.left_stick_x);//strafe left and right
+            /*double leftx = (gamepad1.left_stick_x);//strafe left and right
             double lefty = (gamepad1.left_stick_y + gamepad1.right_stick_y); // forward and backward
-            double rightx = (gamepad1.right_stick_x); // turn left and right
+            double rightx = (gamepad1.right_stick_x); // turn left and right*/
+
+             // Gamepad control inputs
+            lefty1 = gamepad1.left_stick_y; // forward and backward
+            leftx1 = gamepad1.left_stick_x; //strafe left and right
+            rightx1 = gamepad1.right_stick_x; // turn left and right
+
 
             // Base movement logic
             if (gamepad1.right_bumper) {
@@ -141,15 +146,6 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             backLeft.setPower(lefty + leftx - rightx);
             backRight.setPower(lefty - leftx + rightx);*/
 
-            
-            
-            
-            // frontLeft.setPower((basepower * -lefty1) + (basepower * leftx1) + basepower * rightx1);
-            // backRight.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * rightx1);
-            // frontRight.setPower((basepower * lefty1) + (basepower * leftx1) + basepower * rightx1);
-            // backLeft.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * -rightx1);
-
-
             // Arm Motor control
             
 
@@ -160,7 +156,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
 
             // Claw control 
             lastCycle = currCycle;
-            currCycle = gamepad2.b;
+            currCycle = gamepad2.b; //B button is used for open and closing the claw
             telemetry.addData("Claw Last", lastCycle);
             telemetry.addData("Claw", currCycle);
             if (currCycle && !lastCycle) {
