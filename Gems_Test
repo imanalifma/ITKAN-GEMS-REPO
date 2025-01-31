@@ -22,6 +22,9 @@ public class Gems_Test extends LinearOpMode {
     boolean isPressed;
     boolean isDown = true;
     boolean lastCycle = false, currCycle = false;
+    double intakePosition = 0.5; // Default intake position
+   // boolean isManualMode = false;
+   
 
     @Override
     public void runOpMode()  {
@@ -34,12 +37,13 @@ public class Gems_Test extends LinearOpMode {
         claw = hardwareMap.get(Servo.class, "claw");
         intake = hardwareMap.get(Servo.class, "intake");
         
+        
 
         // Set motor directions
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         // Set zero power behavior
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,69 +73,92 @@ public class Gems_Test extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Gamepad control inputs
-            lefty1 = gamepad1.left_stick_y;
-            leftx1 = gamepad1.left_stick_x;
-            rightx1 = gamepad1.right_stick_x;
+            
             
             // Arm control
-            if (gamepad2.dpad_down) {
-                armTarget = -125; // Home position
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                armMotor.setTargetPosition(armTarget);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-                intake.setPosition(0.9);
-             
-            if (gamepad2.dpad_down) {
-                armTarget = -125; // Home position
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                armMotor.setTargetPosition(armTarget);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-                intake.setPosition(0.9);
+            if (gamepad2.right_bumper) { //0 position
                 
-                //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            } else if (gamepad2.dpad_left) {
-                armTarget = -1700; // Position 1
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                armMotor.setTargetPosition(armTarget);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            } else if (gamepad2.dpad_right) {
-                armTarget = -1227; // Position 2 -1980
-                //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                armMotor.setTargetPosition(armTarget);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                 intake.setPosition(0);
+                move_arm(0); 
+                claw.setPosition(0.8);
             }
-            if (gamepad2.dpad_up) {
-                armTarget = -650; //Position 3
-               // armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                armMotor.setTargetPosition(armTarget);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.5);
-                //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                //intake.setPosition(0.2);
+            
+           /* else if (gamepad2.dpad_up) { // Specimen In position
+                
+                 intake.setPosition(0);
+                move_arm(-900); 
+                claw.setPosition(0.8);
+            }
+            
+            else if (gamepad2.dpad_left) { // Specimen In position
+                
+                 intake.setPosition(0);
+                move_arm(-600); 
+                claw.setPosition(0);
+            }*/
+            
+            else if (gamepad2.x) { // intake grab Position
+                
+               intake.setPosition(1);
+                claw.setPosition(0); 
+                move_arm(-2700); //125
+                intake.setPosition(1); // grab position
+                
+                
+            } else if (gamepad2.a) { // Gamepad A scoring
+                
+                move_arm(-980);
+                intake.setPosition(1);
+            
+            } /*else if (gamepad2.dpad_right) { //intake vertical
+                move_arm(-250);
+                intake.setPosition(1);
+               
+            }*/
+            else if (gamepad2.y) { // drive Position
+                
+                move_arm(-2400); // drive position // 600
+                intake.setPosition(0.5);
+                //claw.setPosition(0);
             }
 
             // Base movement logic
-            if (gamepad1.right_bumper) {
-                basepower = 0.5; // Low speed mode
-            } else {
-                basepower = 0.7; // Full power driving
-            }
+           /* if (gamepad2.left_bumper) {
+                isManualMode = true;
+                telemetry.addData("Manual Mode", isManualMode);
+            } */
+            //else {
+            //    isManualMode = false; // Full power driving
+            //}
             
-            frontLeft.setPower((basepower * -lefty1) + (basepower * leftx1) + basepower * rightx1);
-            backRight.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * rightx1);
-            frontRight.setPower((basepower * lefty1) + (basepower * leftx1) + basepower * rightx1);
-            backLeft.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * -rightx1);
+            // base code
+            double leftx = (gamepad1.left_stick_x);//strafe left and right
+            double lefty = (gamepad1.left_stick_y + gamepad1.right_stick_y); // forward and backward
+            double rightx = (gamepad1.right_stick_x); // turn left and right
+
+
+            
+            frontLeft.setPower(lefty- leftx - rightx);
+            frontRight.setPower(lefty + leftx + rightx);
+            backLeft.setPower(lefty + leftx - rightx);
+            backRight.setPower(lefty - leftx + rightx);
+
+            
+            /*if(gamepad2.right_trigger>0.3){
+                //isManualMode = false;
+                
+                float fwdBackArm = gamepad2.right_trigger;
+                telemetry.addData("Arm Free Position", fwdBackArm);
+                //float UpDownWrist = gamepad2.left_trigger;
+            
+                armMotor.setPower(fwdBackArm);
+                //intake.setPosition(UpDownWrist);
+            }*/
+            
+            // frontLeft.setPower((basepower * -lefty1) + (basepower * leftx1) + basepower * rightx1);
+            // backRight.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * rightx1);
+            // frontRight.setPower((basepower * lefty1) + (basepower * leftx1) + basepower * rightx1);
+            // backLeft.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * -rightx1);
 
 
             // Arm Motor control
@@ -140,19 +167,11 @@ public class Gems_Test extends LinearOpMode {
             // Intake control 
            
             
-            if (gamepad2.y) {
-                move_wrist("home");
-            } else if (gamepad2.x) {
-                move_wrist("back");
-            } else if (gamepad2.b) {
-                move_wrist("grab");
-            } else if (gamepad2.a) {
-                move_wrist("bucket");
-            }
+            
 
             // Claw control 
             lastCycle = currCycle;
-            currCycle = gamepad2.right_bumper;
+            currCycle = gamepad2.b;
             telemetry.addData("Claw Last", lastCycle);
             telemetry.addData("Claw", currCycle);
             if (currCycle && !lastCycle) {
@@ -160,18 +179,46 @@ public class Gems_Test extends LinearOpMode {
                 if (isDown) {
                     claw.setPosition(0.1);  
                 } else {
-                    claw.setPosition(1);
+                    claw.setPosition(0.8);
                 }
-            }
+            
+            
+            /*if (gamepad2.dpad_up) {
+                move_wrist("grab");
+                move_arm(-2600);
+            }  if (gamepad2.dpad_down) {
+                move_wrist("back");
+            } else if (gamepad2.dpad_left) {
+                move_wrist("home");
+            } else if (gamepad2.dpad_right) {
+                move_wrist("bucket");
+            }*/
 
             // Send telemetry data
-            telemetry.addData("Arm Position", armMotor.getCurrentPosition());
+            
+        }
+        
+          /*if (gamepad1.dpad_up) {
+                intakePosition += 0.01; // Move up
+            } 
+            else if (gamepad1.dpad_down) {
+                intakePosition -= 0.01; // Move down
+            }
+
+            // Keep intake within valid servo range
+            intakePosition = Math.max(0.0, Math.min(1.0, intakePosition));
+            intake.setPosition(intakePosition);*/
+            
+            
+        telemetry.addData("Arm Position", armMotor.getCurrentPosition());
+            //telemetry.addData("Manual Mode", isManualMode);
             telemetry.addData("Arm Target Position", armTarget);
             telemetry.addData("Base Power", basepower);
             telemetry.addData("Low Power Mode", gamepad1.right_bumper);
             telemetry.update();
-        }
     }
+    }
+    
 
     public void move_wrist(String pos) {
         if (pos.equals("home")) {
@@ -188,4 +235,13 @@ public class Gems_Test extends LinearOpMode {
             telemetry.addData("p", "bucket");
         }
     }
+  public void move_arm(int armTarget) {
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setTargetPosition(armTarget);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.5);
+  }  
+  
+
+
 }
