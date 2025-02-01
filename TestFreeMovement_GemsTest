@@ -91,6 +91,7 @@ public class Gems_Test extends LinearOpMode {
            else if (gamepad2.dpad_up) { // Specimen In position
                if (armPosition > minArmPosition) {
                     if ( isArmPositionCalculated == false) {
+                    armPosition =   armMotor.getCurrentPosition()
                     armPosition = armPosition + armMovement
                      isArmPositionCalculated = true;
                     }
