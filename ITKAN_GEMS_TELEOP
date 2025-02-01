@@ -76,7 +76,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             } else if (gamepad2.x) { // Gamepad 2 X button is used for the intake grab Position of the arm and wrist
                 intake.setPosition(1); 
                 claw.setPosition(0); 
-                move_arm(-2700);
+                move_arm(-2690);
                 intake.setPosition(1); // grab position
             } else if (gamepad2.a) { // Gamepad 2 A button is used for scoring position of the arm and wrist
                 move_arm(-980);
