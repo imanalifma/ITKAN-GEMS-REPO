@@ -100,20 +100,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             }
         //***********This section is for intake positions through dpad on gamepad 2**************/
             else if (gamepad2.dpad_up) { // Specimen In position
-               if (armPosition < maxArmPosition) {
-                    if ( isopModeValueCalculated == false) {
-                    armPosition =  -( armMotor.getCurrentPosition());
-                    armPosition = armPosition + armMoveLength;
-                    telemetry.addData("Arm Free Position", armPosition);
-                     isopModeValueCalculated = true;
-                    }
-                }
-                //intake.setPosition(0);
-                move_arm(-armPosition); 
-                //claw.setPosition(0.8);
-            }
-            else if (gamepad2.dpad_down) { // Specimen In position
-               if (armPosition > minArmPosition) {
+                if (armPosition > minArmPosition) {
                     if ( isopModeValueCalculated == false) {
                     armPosition =  -( armMotor.getCurrentPosition());
                     armPosition = armPosition - armMoveLength;
@@ -121,11 +108,20 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
                      isopModeValueCalculated = true;
                     }
                 }
-                //intake.setPosition(0);
                 move_arm(-armPosition); 
-                //claw.setPosition(0.8);
             }
-            } else if (gamepad2.dpad_right) { //intake vertical
+            else if (gamepad2.dpad_down) { // Specimen In position
+                if (armPosition < maxArmPosition) {
+                    if ( isopModeValueCalculated == false) {
+                    armPosition =  -( armMotor.getCurrentPosition());
+                    armPosition = armPosition + armMoveLength;
+                    telemetry.addData("Arm Free Position", armPosition);
+                     isopModeValueCalculated = true;
+                    }
+                }
+                move_arm(-armPosition); 
+            }
+            else if (gamepad2.dpad_right) { //intake vertical
                    double lrintakepos = intake.getPosition();
                    if (lrintakepos < maxintakePosition) {
                        if ( isopModeValueCalculated == false) {
@@ -211,6 +207,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             //***********This section is for wrist positions through dpad on gamepad 1**************/
             // Send telemetry data
             telemetry.addData("Arm Position", armMotor.getCurrentPosition());
+            telemetry.addData("Wrist Position", intake.getPosition());
             telemetry.addData("Arm Target Position", armTarget);
             telemetry.addData("Base Power", basepower);
             telemetry.addData("Low Power Mode", gamepad1.right_bumper);
