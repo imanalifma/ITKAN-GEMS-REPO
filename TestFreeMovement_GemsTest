@@ -126,7 +126,10 @@ public class Gems_Test extends LinearOpMode {
                 intake.setPosition(0.5);
                 //claw.setPosition(0);
             }
+            else {
 
+                 isArmPositionCalculated = false;
+            }
             // Base movement logic
            /* if (gamepad2.left_bumper) {
                 isManualMode = true;
