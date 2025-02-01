@@ -1,0 +1,131 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@Autonomous
+public class WAuton extends LinearOpMode {
+
+    DcMotor fl, fr, bl, br;
+    DcMotor arm;
+    Servo claw;
+
+    final double HOLD_POWER = 0.5;
+    final double DRIVE_POWER = 0.1;
+    final double ARM_POWER = 0.2;
+
+    @Override
+    public void runOpMode() {
+
+        // Initialize motors and servos
+        fl = hardwareMap.get(DcMotor.class, "fl");
+        fr = hardwareMap.get(DcMotor.class, "fr");
+        bl = hardwareMap.get(DcMotor.class, "bl");
+        br = hardwareMap.get(DcMotor.class, "br");
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        claw = hardwareMap.get(Servo.class, "claw");
+
+        // Set motor directions
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        arm.setDirection(DcMotor.Direction.REVERSE);
+
+        // Set motors to brake when at zero power
+        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Before Initialization - Close the claw
+        claw.setPosition(0);  // Assume 0 is the closed position
+        telemetry.addLine("Claw Closed");
+        telemetry.update();
+
+        waitForStart();
+
+        // Reset encoder and set mode for the arm
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Step 1: Move the arm UP to position 300
+     
+       
+        moveArmToPosition(550);
+driveForward(900, DRIVE_POWER);
+ claw.setPosition(0);
+        // Step 2: Move the arm BACK DOWN to position 0
+        moveArmToPosition(1100);
+
+        // Step 3: Open the claw
+        claw.setPosition(1);  // Assume 1 is the open position
+        telemetry.addLine("Claw Opened");
+        telemetry.update();
+        sleep(500);
+
+        // Step 4: Move forward
+       
+
+        // Step 5: Move backward
+        driveForward(-1000, DRIVE_POWER);
+        sleep(500);
+    }
+
+    // Method to move arm to a specific position using encoder
+    private void moveArmToPosition(int position) {
+        arm.setTargetPosition(position);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(ARM_POWER);
+       
+        while (arm.isBusy() && opModeIsActive()) {
+            telemetry.addData("Moving to position", position);
+            telemetry.addData("Current position", arm.getCurrentPosition());
+            telemetry.update();
+        }
+       
+        arm.setPower(0);  // Stop movement completely
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    // Method to move the robot forward or backward
+    private void driveForward(int targetPosition, double power) {
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        fl.setTargetPosition(targetPosition);
+        fr.setTargetPosition(targetPosition);
+        bl.setTargetPosition(targetPosition);
+        br.setTargetPosition(targetPosition);
+
+        fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        fl.setPower(power);
+        fr.setPower(power);
+        bl.setPower(power);
+        br.setPower(power);
+
+        while (fl.isBusy() && fr.isBusy() && bl.isBusy() && br.isBusy() && opModeIsActive()) {
+            telemetry.addData("Driving", targetPosition);
+            telemetry.update();
+        }
+
+        fl.setPower(0);
+        fr.setPower(0);
+        bl.setPower(0);
+        br.setPower(0);
+
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+}
