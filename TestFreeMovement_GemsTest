@@ -23,7 +23,7 @@ public class Gems_Test extends LinearOpMode {
     boolean isDown = true;
     boolean lastCycle = false, currCycle = false;
     double intakePosition = 0.5; // Default intake position
-    int maxArmPosition = -2700;
+    int maxArmPosition = 2700;
     int minArmPosition = 0;
     int armPosition = 0;
     int armMoveLength = 100;
@@ -88,13 +88,18 @@ public class Gems_Test extends LinearOpMode {
                 claw.setPosition(0.8);
             }
             
-           /* else if (gamepad2.dpad_up) { // Specimen In position
-                
-                 intake.setPosition(0);
-                move_arm(-900); 
+           else if (gamepad2.dpad_up) { // Specimen In position
+               if (armPosition > minArmPosition) {
+                    if ( isArmPositionCalculated == false) {
+                    armPosition = armPosition + armMovement
+                     isArmPositionCalculated = true;
+                    }
+                }
+                intake.setPosition(0);
+                move_arm(-armPosition); 
                 claw.setPosition(0.8);
             }
-            
+/*            
             else if (gamepad2.dpad_left) { // Specimen In position
                 
                  intake.setPosition(0);
