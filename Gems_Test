@@ -23,6 +23,11 @@ public class Gems_Test extends LinearOpMode {
     boolean isDown = true;
     boolean lastCycle = false, currCycle = false;
     double intakePosition = 0.5; // Default intake position
+    int maxArmPosition = -2700;
+    int minArmPosition = 0;
+    int armPosition = 0;
+    int armMoveLength = 100;
+    boolean isArmPositionCalculated = false;
    // boolean isManualMode = false;
    
 
@@ -101,7 +106,7 @@ public class Gems_Test extends LinearOpMode {
                 
                intake.setPosition(1);
                 claw.setPosition(0); 
-                move_arm(-2700); //125
+                move_arm(-2690); //125
                 intake.setPosition(1); // grab position
                 
                 
