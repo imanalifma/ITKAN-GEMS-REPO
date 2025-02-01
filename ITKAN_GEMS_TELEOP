@@ -134,10 +134,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
             frontRight.setPower((basepower * lefty1) + (basepower * leftx1) + basepower * rightx1);
             backLeft.setPower((basepower * lefty1) - (basepower * leftx1) + basepower * -rightx1);*/
             
-            // Arm Motor manual control
-            /*if (gamepad2.left_bumper) {//Gamepad 2 left bumper is used for manually adjust the arm
-                moveArmByTicks(0.5, 2); // 
-            } */
+            
             //***********This section is commented out**************/
 
             // Claw control 
@@ -196,18 +193,5 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(0.5);
   } 
-
-void moveArmByTicks(double power, double ticks){
-    int armTarget = 0;
-    //while(armMotor.getCurrentPosition() < ticks && opModeIsActive()){
-        armTarget += armMotor.getCurrentPosition() + ticks;
-       // armMotor.setPower(power);
-    //}
-    armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    armMotor.setTargetPosition(armTarget);
-    armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    armMotor.setPower(0.5);
-}
-
 }
 
