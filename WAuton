@@ -7,125 +7,144 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
 public class WAuton extends LinearOpMode {
-
-    DcMotor fl, fr, bl, br;
-    DcMotor arm;
-    Servo claw;
-
-    final double HOLD_POWER = 0.5;
-    final double DRIVE_POWER = 0.1;
-    final double ARM_POWER = 0.2;
+    private DcMotor backLeft, backRight, frontLeft, frontRight, armMotor;
+    private Servo claw, intake;
 
     @Override
     public void runOpMode() {
-
-        // Initialize motors and servos
-        fl = hardwareMap.get(DcMotor.class, "fl");
-        fr = hardwareMap.get(DcMotor.class, "fr");
-        bl = hardwareMap.get(DcMotor.class, "bl");
-        br = hardwareMap.get(DcMotor.class, "br");
-        arm = hardwareMap.get(DcMotor.class, "arm");
+        // Initialize hardware
+        backLeft = hardwareMap.get(DcMotor.class, "bl");
+        backRight = hardwareMap.get(DcMotor.class, "br");
+        frontLeft = hardwareMap.get(DcMotor.class, "fl");
+        frontRight = hardwareMap.get(DcMotor.class, "fr");
+        armMotor = hardwareMap.get(DcMotor.class, "leftarm");
         claw = hardwareMap.get(Servo.class, "claw");
+        intake = hardwareMap.get(Servo.class, "intake");
 
         // Set motor directions
-        fl.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.FORWARD);
-        fr.setDirection(DcMotor.Direction.FORWARD);
-        arm.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        // Set motors to brake when at zero power
-        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Before Initialization - Close the claw
-        claw.setPosition(0);  // Assume 0 is the closed position
-        telemetry.addLine("Claw Closed");
-        telemetry.update();
-
+        // Set zero power behavior
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         claw.setPosition(0.8);
         waitForStart();
 
-        // Reset encoder and set mode for the arm
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (opModeIsActive()) {
+            // Step 1: Close claw
+            claw.setPosition(0.8);
+        
 
-        // Step 1: Move the arm UP to position 300
-     
-       
-        moveArmToPosition(550);
-driveForward(900, DRIVE_POWER);
- claw.setPosition(0);
-        // Step 2: Move the arm BACK DOWN to position 0
-        moveArmToPosition(1100);
+            // Step 2: Raise arm to -980 and hold position
+            moveArm(-980);
+            intake.setPosition(1);
+            holdArmPosition();
+            sleep(100);
 
-        // Step 3: Open the claw
-        claw.setPosition(1);  // Assume 1 is the open position
-        telemetry.addLine("Claw Opened");
-        telemetry.update();
-        sleep(500);
+            // Step 3: Move forward for 800 encoder ticks
+            moveForward(590);
+            sleep(100);
 
-        // Step 4: Move forward
-       
+            // Step 4: Lower arm to -800 and hold position
+            moveArm(-800);
+            holdArmPosition();
+            sleep(100);
 
-        // Step 5: Move backward
-        driveForward(-1000, DRIVE_POWER);
-        sleep(500);
+            // Step 5: Move backward for 100 encoder ticks
+            moveBackward(200);
+            sleep(300);
+
+            // Step 6: Open claw
+            claw.setPosition(0.1);
+            sleep(300);
+            
+             intake.setPosition(0);
+              moveArm(-2425);
+            holdArmPosition();
+            // Step 7: Strafe right
+            strafeRight(-1050);
+            sleep(300);
+             moveForward(400);
+            sleep(100);
+            intake.setPosition(1);
+            sleep(300);
+            moveArm(-2750);
+            moveBackward(257);
+            
+              claw.setPosition(0.8);
+              sleep(100);
+              moveForward(240);
+        }
     }
 
-    // Method to move arm to a specific position using encoder
-    private void moveArmToPosition(int position) {
-        arm.setTargetPosition(position);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(ARM_POWER);
-       
-        while (arm.isBusy() && opModeIsActive()) {
-            telemetry.addData("Moving to position", position);
-            telemetry.addData("Current position", arm.getCurrentPosition());
+    private void moveArm(int targetPosition) {
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setTargetPosition(targetPosition);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.5);
+        while (opModeIsActive() && armMotor.isBusy()) {
+            telemetry.addData("Arm Position", armMotor.getCurrentPosition());
             telemetry.update();
         }
-       
-        arm.setPower(0);  // Stop movement completely
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setPower(0.1); // Apply slight power to hold position
     }
 
-    // Method to move the robot forward or backward
-    private void driveForward(int targetPosition, double power) {
-        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    private void holdArmPosition() {
+        armMotor.setPower(0.1); // Maintain position with slight power
+    }
 
-        fl.setTargetPosition(targetPosition);
-        fr.setTargetPosition(targetPosition);
-        bl.setTargetPosition(targetPosition);
-        br.setTargetPosition(targetPosition);
+    private void moveForward(int ticks) {
+        setTargetPosition(ticks, ticks, ticks, ticks);
+        setPower(0.5);
+        waitForMotors();
+    }
 
-        fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    private void moveBackward(int ticks) {
+        setTargetPosition(-ticks, -ticks, -ticks, -ticks);
+        setPower(0.5);
+        waitForMotors();
+    }
 
-        fl.setPower(power);
-        fr.setPower(power);
-        bl.setPower(power);
-        br.setPower(power);
+    private void strafeRight(int ticks) {
+        setTargetPosition(-ticks, ticks, ticks, -ticks);
+        setPower(0.5);
+        waitForMotors();
+    }
 
-        while (fl.isBusy() && fr.isBusy() && bl.isBusy() && br.isBusy() && opModeIsActive()) {
-            telemetry.addData("Driving", targetPosition);
+    private void setTargetPosition(int fl, int fr, int bl, int br) {
+        frontLeft.setTargetPosition(frontLeft.getCurrentPosition() + fl);
+        frontRight.setTargetPosition(frontRight.getCurrentPosition() + fr);
+        backLeft.setTargetPosition(backLeft.getCurrentPosition() + bl);
+        backRight.setTargetPosition(backRight.getCurrentPosition() + br);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private void setPower(double power) {
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
+    }
+
+    private void waitForMotors() {
+        while (opModeIsActive() && (frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy())) {
+            telemetry.addData("Front Left", frontLeft.getCurrentPosition());
+            telemetry.addData("Front Right", frontRight.getCurrentPosition());
+            telemetry.addData("Back Left", backLeft.getCurrentPosition());
+            telemetry.addData("Back Right", backRight.getCurrentPosition());
             telemetry.update();
         }
-
-        fl.setPower(0);
-        fr.setPower(0);
-        bl.setPower(0);
-        br.setPower(0);
-
-        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setPower(0);
     }
 }
