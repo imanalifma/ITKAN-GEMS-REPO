@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp
-
 public class ITKAN_GEMS_TELEOP extends LinearOpMode {
-
     private DcMotor backLeft;
     private DcMotor backRight;
     private DcMotor frontLeft;
@@ -24,17 +23,21 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
     boolean isDown = true;
     boolean lastCycle = false, currCycle = false;
     double intakePosition = 0.5; // Default intake position
-    int maxArmPosition = 2903;//2500;
+    int maxArmPosition = 2500;
     int minArmPosition = 0;
     
     int armPosition = 0;
-    int armMoveLength = 50;
+    int armMoveLength = 100;
     
     double maxintakePosition = 1;
     double minintakePosition = 0.50;
     double intakeMoveLength = 0.1;
     
     boolean isopModeValueCalculated = false;
+
+    double strafemulti;
+    double forwardmulti;
+    double turnmulti;
     
     @Override
     public void runOpMode()  {
@@ -49,11 +52,10 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
            
 
         // Set motor directions
-        
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set zero power behavior
@@ -77,53 +79,67 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //double basepower = 0.7;
-    
+        double lefty, leftx, rightx;
 
         waitForStart();
 
         while (opModeIsActive()) {
             // Arm control
             if (gamepad2.right_bumper) { //Gamepad 2 right bumper is used for home (0) position for the arm and wrist
-                 intake.setPosition(0);//0);
-                 move_arm(0);//0); 
-                 claw.setPosition(0);//0.8);
+                 intake.setPosition(0);
+                 move_arm(0); 
+                 claw.setPosition(0.8);
             } else if (gamepad2.x) { // Gamepad 2 X button is used for the intake grab Position of the arm and wrist
-                //intake.setPosition(0); 
+                intake.setPosition(1); 
                 claw.setPosition(0); 
-                move_arm(2820);//-2725);
+                move_arm(-2690);
                 intake.setPosition(1); // grab position
             } else if (gamepad2.a) { // Gamepad 2 A button is used for scoring position of the arm and wrist
-                move_arm(1200);
-                intake.setPosition(1);//0.3);
+                move_arm(-980);
+                intake.setPosition(1);
             } else if (gamepad2.y) { // Gamepad 2 Y button is used for the drive Position of the arm and wrist
-                move_arm(600); // drive position // 600
-                intake.setPosition(0);
-                claw.setPosition(1);
+                move_arm(-2400); // drive position // 600
+                intake.setPosition(0.5);
+                //claw.setPosition(0);
             }
         //***********This section is for intake positions through dpad on gamepad 2**************/
-            else if (gamepad2.dpad_up) { // Specimen In position
-                if (armPosition > minArmPosition) {
-                    if ( isopModeValueCalculated == false) {
-                    armPosition =  ( armMotor.getCurrentPosition());
-                    armPosition = armPosition - armMoveLength;
-                    telemetry.addData("Arm Free Position", armPosition);
-                     isopModeValueCalculated = true;
+               if (gamepad2.dpad_up) {
+                 arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                 arm.setPower(0.5); // Move up
+                 targetPosition = arm.getCurrentPosition(); // Update target position
+                 telemetry.addLine("Manual Move Up");
+                 }          
+                    else if (gamepad2.dpad_down) {
+                 arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                 arm.setPower(-0.5); // Move down
+                 targetPosition = arm.getCurrentPosition(); // Update target position
+                 telemetry.addLine("Manual Move Down");
+           }
+         else{
+          arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          arm.setTargetPosition(targetPosition);
+         }
+
+
+             if (gamepad1.dpad_up) {
+                 arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                 arm.setPower(-0.5); // Move down
+                 targetPosition = arm.getCurrentPosition(); // Update target position
+                 telemetry.addLine("Manual Move Down");
                     }
                 }
-                move_arm(armPosition); 
+                move_arm(-armPosition); 
             }
-            else if (gamepad2.dpad_down) { // Specimen In position
-                if (armPosition < maxArmPosition) {
-                    if ( isopModeValueCalculated == false) {
-                    armPosition =  ( armMotor.getCurrentPosition());
-                    armPosition = armPosition + armMoveLength;
-                    telemetry.addData("Arm Free Position", armPosition);
-                     isopModeValueCalculated = true;
+            else if (gamepad1.dpad_down) {
+                 arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                 arm.setPower(0.5); // Move up
+                 targetPosition = arm.getCurrentPosition(); // Update target position
+                 telemetry.addLine("Manual Move Up");
                     }
                 }
-                move_arm(armPosition); 
-            }
-            else if (gamepad2.dpad_right) { //intake vertical
+                move_arm(-armPosition); 
+            }*/
+           if (gamepad2.dpad_right) { //intake vertical
                    double lrintakepos = intake.getPosition();
                    if (lrintakepos < maxintakePosition) {
                        if ( isopModeValueCalculated == false) {
@@ -197,7 +213,7 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
 
             // Intake control 
             //***********This section is for wrist positions through dpad on gamepad 1**************/
-           /* if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_up) {
                 move_wrist("home");
             }  if (gamepad1.dpad_down) {
                 move_wrist("back");
@@ -205,13 +221,13 @@ public class ITKAN_GEMS_TELEOP extends LinearOpMode {
                 move_wrist("grab");
             } else if (gamepad1.dpad_right) {
                 move_wrist("bucket");
-            }*/
+            }
             //***********This section is for wrist positions through dpad on gamepad 1**************/
             // Send telemetry data
             telemetry.addData("Arm Position", armMotor.getCurrentPosition());
             telemetry.addData("Wrist Position", intake.getPosition());
             telemetry.addData("Arm Target Position", armTarget);
-            //telemetry.addData("Base Power", basepower);
+            telemetry.addData("Base Power", basepower);
             telemetry.addData("Low Power Mode", gamepad1.right_bumper);
             telemetry.update();
         }
